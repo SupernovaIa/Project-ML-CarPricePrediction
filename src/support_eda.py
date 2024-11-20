@@ -40,3 +40,23 @@ def distribution(df, first, last, col, n=1, size = (10, 5)):
     # Show the plot
     plt.tight_layout()
     plt.show()
+
+
+def count_plot(df, col, size = (8, 4), color='mako'):
+
+    plt.figure(figsize=size)
+
+    sns.countplot(
+        x=col, 
+        data=df[col].reset_index(),  
+        palette=color, 
+        order=df[col].value_counts().index,
+        edgecolor="black"
+    )
+
+    plt.title(f"Distribution of {col}")
+    plt.xlabel("")
+    plt.ylabel("Number of registrations")
+
+    plt.tight_layout()
+    plt.show()
