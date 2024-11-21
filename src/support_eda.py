@@ -1,9 +1,10 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+import math
 
 
-def distribution(df, first, last, col, n=1, size = (10, 5)):
+def plot_numeric_distribution(df, first, last, col, n=1, size = (10, 5)):
     # Validate inputs
     if n <= 0:
         raise ValueError("Bin width (n) must be a positive integer.")
@@ -42,7 +43,7 @@ def distribution(df, first, last, col, n=1, size = (10, 5)):
     plt.show()
 
 
-def count_plot(df, col, size = (8, 4), color='mako'):
+def plot_categoric_distribution(df, col, size = (8, 4), color='mako'):
 
     plt.figure(figsize=size)
 
@@ -58,5 +59,84 @@ def count_plot(df, col, size = (8, 4), color='mako'):
     plt.xlabel("")
     plt.ylabel("Number of registrations")
 
+    plt.xticks(rotation=45)
+
     plt.tight_layout()
     plt.show()
+
+
+def plot_correlation_matrix(df, size = (5, 5)):
+
+    corr_matrix = df.corr(numeric_only=True)
+    plt.figure(figsize=size)
+
+    # Mask to make it triangular
+    mask = np.triu(np.ones_like(corr_matrix, dtype = np.bool_))
+    sns.heatmap(corr_matrix, 
+                annot=True, 
+                vmin = -1, 
+                vmax = 1, 
+                mask=mask)
+    
+
+def plot_relation_tv_numeric(df, tv, size = (15, 10)):
+    
+    df_num = df.select_dtypes(include = np.number)
+    cols_num = df_num.columns
+
+    n_plots = len(cols_num)
+    num_filas = math.ceil(n_plots/2)
+
+    fig, axes = plt.subplots(nrows=num_filas, ncols=2, figsize = size)
+    axes = axes.flat
+
+    for i, col in enumerate(cols_num):
+
+        if col == tv:
+            fig.delaxes(axes[i])
+
+        else:
+            sns.scatterplot(x = col,
+                        y = tv,
+                        data = df_num,
+                        ax = axes[i], 
+                        palette = 'mako')
+            
+            axes[i].set_title(col)
+            axes[i].set_xlabel('')
+
+    # Remove last plot, if empty
+    if n_plots % 2 != 0:
+        fig.delaxes(axes[-1])
+    plt.tight_layout()
+
+
+
+def plot_outliers(df):
+
+    df_num = df.select_dtypes(include = np.number)
+    cols_num = df_num.columns
+
+    n_plots = len(cols_num)
+    num_rows = math.ceil(n_plots/2)
+
+    cmap = plt.cm.get_cmap('mako', n_plots)
+    color_list = [cmap(i) for i in range(cmap.N)]
+
+    fig, axes = plt.subplots(nrows=num_rows, ncols=2, figsize = (9, 5))
+    axes = axes.flat
+
+    for i, col in enumerate(cols_num):
+
+        sns.boxplot(x = col, 
+                    data = df_num,
+                    ax = axes[i],
+                    color=color_list[i]) 
+        
+        axes[i].set_title(f'{col} outliers')
+        axes[i].set_xlabel('')
+
+    # Remove last plot, if empty
+    if n_plots % 2 != 0:
+        fig.delaxes(axes[-1])
+    plt.tight_layout()
