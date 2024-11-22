@@ -4,7 +4,7 @@ import numpy as np
 import math
 
 
-def plot_numeric_distribution(df, first, last, col, n=1, size = (10, 5)):
+def plot_numeric_distribution(df, first, last, col, n=1, size = (10, 5), rotation=45):
     # Validate inputs
     if n <= 0:
         raise ValueError("Bin width (n) must be a positive integer.")
@@ -33,7 +33,7 @@ def plot_numeric_distribution(df, first, last, col, n=1, size = (10, 5)):
     plt.ylabel("Frequency")
     
     # Set x-ticks to align with bins
-    plt.xticks(bin_edges, rotation=45)
+    plt.xticks(bin_edges, rotation=rotation)
     
     # Add gridlines
     plt.grid(axis='y', linestyle='--', alpha=0.7)
@@ -43,7 +43,7 @@ def plot_numeric_distribution(df, first, last, col, n=1, size = (10, 5)):
     plt.show()
 
 
-def plot_categoric_distribution(df, col, size = (8, 4), color='mako'):
+def plot_categoric_distribution(df, col, size = (8, 4), color='mako', rotation=45):
 
     plt.figure(figsize=size)
 
@@ -59,7 +59,7 @@ def plot_categoric_distribution(df, col, size = (8, 4), color='mako'):
     plt.xlabel("")
     plt.ylabel("Number of registrations")
 
-    plt.xticks(rotation=45)
+    plt.xticks(rotation=rotation)
 
     plt.tight_layout()
     plt.show()
